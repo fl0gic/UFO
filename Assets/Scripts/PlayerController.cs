@@ -41,11 +41,11 @@ public class PlayerController : MonoBehaviour
     {
         int pickupCount = pickups.GetComponent<PickupsController>().pickupCount;
 
-        countText.text = "Count: " + count + " / " + pickupCount;
+        countText.text = "Items Picked Up: " + count + " / " + pickupCount;
 
         if (count >= pickupCount)
         {
-            winText.text = "You Win!";
+            winText.text = "VICTORY!";
         }
     }
 }
