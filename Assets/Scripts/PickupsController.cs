@@ -7,7 +7,7 @@ public class PickupsController : MonoBehaviour
     public GameObject pickupPrefab;
     
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         Random rand = new Random();
         

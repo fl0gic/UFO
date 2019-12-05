@@ -14,14 +14,24 @@ public class PlayerController : MonoBehaviour
     {
         body = GetComponent<Rigidbody2D>();
         count = 0;
+        Cursor.visible = false;
         
         SetCountText();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Cursor.visible = !Cursor.visible;
     }
 
     private void FixedUpdate()
     {
         float moveH = Input.GetAxis("Horizontal");
         float moveV = Input.GetAxis("Vertical");
+
+        if (moveH > 0.2 || moveV > 0.2)
+            Cursor.visible = false;
         
         body.AddForce(new Vector2(moveH, moveV) * speed);
     }
@@ -36,16 +46,17 @@ public class PlayerController : MonoBehaviour
             SetCountText();
         }
     }
-    
-    void SetCountText()
+
+    private void SetCountText()
     {
         int pickupCount = pickups.GetComponent<PickupsController>().pickupCount;
 
-        countText.text = "Items Picked Up: " + count + " / " + pickupCount;
+        countText.text = $"{count} / {pickupCount}";
 
         if (count >= pickupCount)
         {
-            winText.text = "VICTORY!";
+            winText.text = "YOU WIN!";
+            Cursor.visible = true;
         }
     }
 }
