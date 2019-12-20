@@ -2,7 +2,7 @@
 
 public class ButtonHandler : MonoBehaviour
 {
-    public void OnClick()
+    private void OnClick()
     {
         Screen.fullScreen = !Screen.fullScreen;
     }
