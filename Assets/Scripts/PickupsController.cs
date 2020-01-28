@@ -10,10 +10,10 @@ public class PickupsController : MonoBehaviour
     private void Start()
     {
         Random rand = new Random();
-        
         for (int i = 0; i < pickupCount; i++)
         {
-            GameObject pickup = Instantiate(pickupPrefab, new Vector3(rand.Next(-11, 11), rand.Next(-11, 11), 0), Quaternion.identity);
+            GameObject pickup = Instantiate(pickupPrefab, 
+                new Vector3(rand.Next(-11, 11), rand.Next(-11, 11), 0), Quaternion.identity);
             pickup.transform.parent = transform;
         }
     }
