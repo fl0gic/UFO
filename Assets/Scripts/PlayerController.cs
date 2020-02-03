@@ -1,22 +1,26 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    public float gameTimeSeconds;
+    public float totalGameTimeSeconds;
+    private float gameTimeSeconds = 10;
     public float speed;
     public Text countText;
-    public GameObject pickups;
+    public GameObject replayButton;
     public Text winText;
     public Text timerText;
     private Rigidbody2D body;
     private bool gameOver;
-    private int count;
+    private int pickedUpCount;
 
     private void Start()
     {
+        replayButton.SetActive(false);
         body = GetComponent<Rigidbody2D>();
-        count = 0;
+        gameTimeSeconds = totalGameTimeSeconds;
+        pickedUpCount = 0;
         Cursor.visible = false;
         
         SetCountText();
@@ -32,8 +36,8 @@ public class PlayerController : MonoBehaviour
                 gameTimeSeconds -= Time.deltaTime;
             
             timerText.text = gameTimeSeconds > 60 ?
-                $"{(int) gameTimeSeconds / 60}:{gameTimeSeconds % 60:0.00}"
-                : $"{gameTimeSeconds % 60:0.00}";
+                $"{(int) gameTimeSeconds / 60}:{gameTimeSeconds % 60:00.00}"
+                : $"{gameTimeSeconds % 60:00.00}";
 
             if (Input.GetKeyDown(KeyCode.Escape))
                 Cursor.visible = !Cursor.visible;
@@ -61,8 +65,23 @@ public class PlayerController : MonoBehaviour
     {
         if (!gameOver)
         {
-            winText.text = "YOU LOSE!";
-            timerText.text = "0.00";
+            if (pickedUpCount >= PickupsController.PickupCount)
+            {
+                gameOver = true;
+                //The time ratio is doubled to make completing the task in 1/2 the time = 3 stars.
+                int starCount = (int) Math.Round(gameTimeSeconds / totalGameTimeSeconds * 2.0 * 3.0);
+                if (starCount > 3)
+                    starCount = 3;
+                winText.text = "YOU WIN!\n" + new string('\u2605', starCount);
+                Cursor.visible = true;
+            }
+            else
+            {
+                winText.text = "YOU LOSE!";
+                timerText.text = "0.00";
+            }
+
+            replayButton.SetActive(true);
             Cursor.visible = true;
             gameOver = true;
         }
@@ -74,22 +93,18 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.SetActive(false);
             
-            count++;
+            pickedUpCount++;
             SetCountText();
         }
     }
 
     private void SetCountText()
     {
-        int pickupCount = pickups.GetComponent<PickupsController>().pickupCount;
+        int pickupCount = PickupsController.PickupCount;
 
-        countText.text = $"{count} / {pickupCount}";
+        countText.text = $"{pickedUpCount} / {pickupCount}";
 
-        if (count >= pickupCount)
-        {
-            gameOver = true;
-            winText.text = "YOU WIN!";
-            Cursor.visible = true;
-        }
+        if (pickedUpCount >= pickupCount)
+            EndGame();
     }
 }
