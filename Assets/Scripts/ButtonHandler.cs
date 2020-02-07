@@ -8,7 +8,7 @@ public class ButtonHandler : MonoBehaviour
         Screen.fullScreen = !Screen.fullScreen;
     }
 
-    public void replay()
+    public void Replay()
     {
         SceneManager.LoadScene("Main");
     }
